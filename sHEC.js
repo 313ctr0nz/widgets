@@ -1,0 +1,65 @@
+// Inspired by @SithNode.Eth on Twitter 
+// add wallet addresses to Widget Scriptable Parameter
+// separate multiple addresses with comma ",", 
+// no quotes please
+
+// TODO 
+// Handle multiple wallet addresses
+var widget;
+if (config.runsInWidget) {
+    widget = new ListWidget();
+    widget.backgroundColor=new Color("#222222");
+}
+
+if (!(args.widgetParameter.includes("0x"))) {
+    const title = widget.addText("invalid wallet parameter");
+    title.textColor = Color.white();
+    title.textOpacity = 0.8;
+    title.font = new Font("Helvetica-Light ", 10);
+    widget.addSpacer(4);
+}
+
+var wallets = [];
+
+if (args.widgetParameter.includes(",")) {
+    // Handle multiple wallet addresses
+} else {
+    wallets = [args.widgetParameter]; 
+}
+
+var n = 0;
+var usd = 0;
+var strong = 0;
+while (n < wallets.length) {
+var balance_url = 'https://openapi.debank.com/v1/user/protocol?id=' + wallets[n] + '&protocol_id=ftm_hectordao' ;
+const req = new Request(balance_url);
+const data = await req.loadJSON();
+console.log(data);
+var resp = data;
+var total_cnt = resp['portfolio_item_list'].length;
+ console.log(total_cnt);
+ var i =0;
+ while (i < total_cnt) {
+  usd = usd + resp['portfolio_item_list'][i]['stats']['asset_usd_value'];
+strong = strong + resp['portfolio_item_list'][i]['detail']['supply_token_list'][0]['amount'];
+ i = i+1;
+ }
+n =n +1;
+}
+if (config.runsInWidget) {
+   const title = widget.addText("Strong rewards");
+   title.textColor = Color.white();
+   title.textOpacity = 0.8;
+   title.font = new Font("Helvetica-Light ", 10);
+   widget.addSpacer(4);
+   const strongtext = widget.addText(`sHEC: ${strong.toFixed(2)}`);
+   strongtext.textColor = Color.white();
+   strongtext.font = new Font("Courier", 14);
+   widget.addSpacer(2);
+   const usdtext = widget.addText(`USD: ${usd.toFixed(2)}`);
+   usdtext.textColor = Color.white();
+   usdtext.font = new Font("Courier", 14);
+   Script.setWidget(widget);
+   Script.complete();
+   widget.presentMedium()
+}
