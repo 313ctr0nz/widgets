@@ -30,6 +30,8 @@ if (args.widgetParameter.includes(",")) {
 }
 
 var n = 0;
+var i;
+var img;
 while (n < wallets.length) {
     const address = wallets[n];
     if (config.runsInWidget) { // print address
@@ -46,6 +48,12 @@ while (n < wallets.length) {
     var resp = data;
     resp.forEach(token => {
         if (config.runsInWidget) { // print address
+            i = new Request(token.logo_url);
+            img = await i.loadImage();
+            let image = widget.addImage(img);
+            image.leftAlignImage();
+            image.imageSize = new Size(30,30)
+        
             const strongtext = widget.addText(`${token.symbol}: ${token.amount.toFixed(2)}`);
             strongtext.textColor = Color.white();
             strongtext.font = new Font("Courier", 14);
