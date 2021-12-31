@@ -55,7 +55,7 @@ while (n < wallets.length) {
 if (config.runsInWidget) {
     let image = widget.addImage(img);
     image.centerAlignImage();
-    image.imageSize = new Size(150,150)
+    image.imageSize = new Size(30,30)
     widget.addSpacer(4);
 
     const title = widget.addText("Staked Time balance");
