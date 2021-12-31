@@ -30,6 +30,8 @@ if (args.widgetParameter.includes(",")) {
 var n = 0;
 var usd = 0;
 var memo = 0;
+var i;
+var img;
 while (n < wallets.length) {
     var balance_url = 'https://openapi.debank.com/v1/user/protocol?id=' + wallets[n] + '&protocol_id=avax_wonderland' ;
     const req = new Request(balance_url);
@@ -42,24 +44,33 @@ while (n < wallets.length) {
     while (i < total_cnt) {
         usd = usd + resp['portfolio_item_list'][i]['stats']['asset_usd_value'];
         memo = memo + resp['portfolio_item_list'][i]['detail']['supply_token_list'][0]['amount'];
+
+        i = new Request(resp['portfolio_item_list'][i]['detail']['supply_token_list'][0]['logo_url']);
+        img = await i.loadImage();
+    
         i = i+1;
     }
     n =n +1;
 }
 if (config.runsInWidget) {
-   const title = widget.addText("Staked Time balance");
-   title.textColor = Color.white();
-   title.textOpacity = 0.8;
-   title.font = new Font("Helvetica-Light ", 10);
-   widget.addSpacer(4);
-   const strongtext = widget.addText(`MEMO: ${strong.toFixed(2)}`);
-   strongtext.textColor = Color.white();
-   strongtext.font = new Font("Courier", 14);
-   widget.addSpacer(2);
-   const usdtext = widget.addText(`USD: ${usd.toFixed(2)}`);
-   usdtext.textColor = Color.white();
-   usdtext.font = new Font("Courier", 14);
-   Script.setWidget(widget);
-   Script.complete();
-   widget.presentMedium()
+    let image = widget.addImage(img);
+    image.centerAlignImage();
+    image.imageSize = new Size(150,150)
+    widget.addSpacer(4);
+
+    const title = widget.addText("Staked Time balance");
+    title.textColor = Color.white();
+    title.textOpacity = 0.8;
+    title.font = new Font("Helvetica-Light ", 10);
+    widget.addSpacer(4);
+    const strongtext = widget.addText(`MEMO: ${strong.toFixed(2)}`);
+    strongtext.textColor = Color.white();
+    strongtext.font = new Font("Courier", 14);
+    widget.addSpacer(2);
+    const usdtext = widget.addText(`USD: ${usd.toFixed(2)}`);
+    usdtext.textColor = Color.white();
+    usdtext.font = new Font("Courier", 14);
+    Script.setWidget(widget);
+    Script.complete();
+    widget.presentMedium()
 }
