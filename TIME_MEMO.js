@@ -29,9 +29,9 @@ if (args.widgetParameter.includes(",")) {
 
 var n = 0;
 var usd = 0;
-var shec = 0;
+var memo = 0;
 while (n < wallets.length) {
-    var balance_url = 'https://openapi.debank.com/v1/user/protocol?id=' + wallets[n] + '&protocol_id=ftm_hectordao' ;
+    var balance_url = 'https://openapi.debank.com/v1/user/protocol?id=' + wallets[n] + '&protocol_id=avax_wonderland' ;
     const req = new Request(balance_url);
     const data = await req.loadJSON();
     console.log(data);
@@ -41,18 +41,18 @@ while (n < wallets.length) {
     var i =0;
     while (i < total_cnt) {
         usd = usd + resp['portfolio_item_list'][i]['stats']['asset_usd_value'];
-        shec = shec + resp['portfolio_item_list'][i]['detail']['supply_token_list'][0]['amount'];
+        memo = memo + resp['portfolio_item_list'][i]['detail']['supply_token_list'][0]['amount'];
         i = i+1;
     }
     n =n +1;
 }
 if (config.runsInWidget) {
-   const title = widget.addText("Staked HEC balance");
+   const title = widget.addText("Staked Time balance");
    title.textColor = Color.white();
    title.textOpacity = 0.8;
    title.font = new Font("Helvetica-Light ", 10);
    widget.addSpacer(4);
-   const strongtext = widget.addText(`sHEC: ${strong.toFixed(2)}`);
+   const strongtext = widget.addText(`MEMO: ${strong.toFixed(2)}`);
    strongtext.textColor = Color.white();
    strongtext.font = new Font("Courier", 14);
    widget.addSpacer(2);
