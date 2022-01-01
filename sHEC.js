@@ -62,14 +62,22 @@ if (config.runsInWidget) {
     title.textColor = Color.white();
     title.textOpacity = 0.8;
     title.font = new Font("Helvetica-Light ", 10);
+
     widget.addSpacer(4);
     const strongtext = widget.addText(`sHEC: ${shec.toFixed(2)}`);
     strongtext.textColor = Color.white();
     strongtext.font = new Font("Courier", 14);
+
     widget.addSpacer(2);
     const usdtext = widget.addText(`USD: ${usd.toFixed(2)}`);
     usdtext.textColor = Color.white();
     usdtext.font = new Font("Courier", 14);
+
+    widget.addSpacer(2);
+    const usdtext = widget.addText(`Price: ${price.toFixed(2)}`);
+    usdtext.textColor = Color.white();
+    usdtext.font = new Font("Courier", 14);
+
     Script.setWidget(widget);
     Script.complete();
     widget.presentMedium()

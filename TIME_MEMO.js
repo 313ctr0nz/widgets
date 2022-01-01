@@ -30,6 +30,7 @@ if (args.widgetParameter.includes(",")) {
 var n = 0;
 var usd = 0;
 var memo = 0;
+var price = 0;
 var i;
 var img;
 while (n < wallets.length) {
@@ -44,6 +45,7 @@ while (n < wallets.length) {
     while (i < total_cnt) {
         usd = usd + resp['portfolio_item_list'][i]['stats']['asset_usd_value'];
         memo = memo + resp['portfolio_item_list'][i]['detail']['supply_token_list'][0]['amount'];
+        price = resp['portfolio_item_list'][i]['detail']['supply_token_list'][0]['price'];
 
         i = new Request(resp['portfolio_item_list'][i]['detail']['supply_token_list'][0]['logo_url']);
         img = await i.loadImage();
@@ -62,14 +64,22 @@ if (config.runsInWidget) {
     title.textColor = Color.white();
     title.textOpacity = 0.8;
     title.font = new Font("Helvetica-Light ", 10);
+
     widget.addSpacer(4);
     const strongtext = widget.addText(`MEMO: ${memo.toFixed(2)}`);
     strongtext.textColor = Color.white();
     strongtext.font = new Font("Courier", 14);
+
     widget.addSpacer(2);
     const usdtext = widget.addText(`USD: ${usd.toFixed(2)}`);
     usdtext.textColor = Color.white();
     usdtext.font = new Font("Courier", 14);
+
+    widget.addSpacer(2);
+    const usdtext = widget.addText(`Price: ${price.toFixed(2)}`);
+    usdtext.textColor = Color.white();
+    usdtext.font = new Font("Courier", 14);
+
     Script.setWidget(widget);
     Script.complete();
     widget.presentMedium()
