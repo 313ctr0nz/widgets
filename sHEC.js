@@ -41,29 +41,29 @@ function displayData(widget, dataObj) {
     pricetext.font = new Font("Courier", 14);
     widget.addSpacer(2);
 
-    const strongtext = widget.addText(`${params.token_disp}: ${dataObj.token_val.toFixed(2)}`);
+    const strongtext = widget.addText(`${params.token_disp}:  ${dataObj.token_val.toFixed(2)}`);
     strongtext.textColor = Color.white();
     strongtext.font = new Font("Courier", 14);
     widget.addSpacer(2);
 
     // TODO: currency conversion
-    const usdtext = widget.addText(`${params.currency}: ${dataObj.fiat_val.toFixed(2)}`);
+    const usdtext = widget.addText(`${params.currency}:   ${dataObj.fiat_val.toFixed(2)}`);
     usdtext.textColor = Color.white();
     usdtext.font = new Font("Courier", 14);
 
     Script.setWidget(widget);
     Script.complete();
-    widget.presentMedium()
+    widget.presentMedium();
 }
 
 // gets data from debank for wallets
-function getData(wallets) {
+async function getData(wallets) {
     dataObj = {
         "fiat_val"  : 0,
         "token_val" : 0,
         "price"     : 0,
         "img"       : null
-    }
+    };
     
     var n = 0;
     var i;
@@ -116,7 +116,7 @@ if (args.widgetParameter.includes(",")) {
     wallets = [args.widgetParameter]; 
 }
 
-dataObj = getData(wallets);
+dataObj = await getData(wallets);
 
 if (config.runsInWidget) {
     displayData(widget, dataObj);
