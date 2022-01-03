@@ -168,11 +168,21 @@ async function displayWidgetData(widget, combined) {
 // gets protocols from debank for all wallets
 async function getWalletProtoList(wallets) {
     root_url = 'https://openapi.debank.com/v1/user/simple_protocol_list?id=';
-
-    return await Promise.all(wallets.map(wallet => fetch(root_url + wallet)))
-        .then(async(response) => Promise.all(response.map(async(res, index) => {
-            return { "wallet" : wallets[index], "result" : await res.json() };
-        })))
+    var walletList = [];
+    var n = 0;
+    while (n < wallets.length) {
+        const req = new Request(root_url + wallets[n]);
+        if (mode == 'browser') {                // I hate this
+            walletList.push({ "wallet" : wallets[n], "result" : await fetch(req)
+                .then(async(response) => await response.json())})
+        } else if (mode == 'scriptable') {      // also hate this 
+            const json = await req.loadJSON();
+            walletList.push({ "wallet" : wallets[n], "result" : json })
+        }
+        n++;
+    }
+    console.log(walletList)
+    return walletList;        
 }
 
 // get data from debank for all protocols by walllet
