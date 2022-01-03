@@ -43,6 +43,8 @@ async function displayWidget(combined) {
         row = new UITableRow();
         table.addRow(row);
 
+        var cell1 = new UITableCell().image(image);
+
         let i = new Request(data.logo_url);
         let image = cell1.addImage(await i.loadImage());
         image.leftAlignImage();
@@ -52,7 +54,7 @@ async function displayWidget(combined) {
         row.addCell(cell1);
     
         var txt = `Chain: ${data.chain}<br>${data.symbol}:  ${data.amount.toFixed(2)}<br>Price: ${data.price.toFixed(2)}<br>${currency}:   ${data.total.toFixed(2)}`;
-        cell2 = new UITableCell().text();
+        var cell2 = new UITableCell().text();
         row.addCell(cell2);
     }
 
