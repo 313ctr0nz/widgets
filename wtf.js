@@ -383,10 +383,21 @@ combined = [
     ]
 ]
 
+var widget = new ListWidget();
+widget.backgroundColor=new Color("#222222");
+
+const usdtext = widget.addText(`hi`);
+usdtext.textColor = Color.white();
+usdtext.font = new Font("Courier", 14);
+
+Script.setWidget(widget);
+Script.complete();
+widget.presentMedium();
+
     // if (mode == "browser") 
     //     displayBrowser(combined);
     // else if (mode == "scriptable")
-        displayWidget(combined);
+        // displayWidget(combined);
 }
 
 /* Main code starts here */
