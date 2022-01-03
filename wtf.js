@@ -6,37 +6,46 @@ const currency = "USD";
 var page = 0;
 
 function displayWidget(combined) {
+    console.log("1")
     var widget = new ListWidget();
     widget.backgroundColor=new Color("#222222");
     
+    console.log("1")
 	const ui = new UITable();
 	ui.removeAllRows();
 	let rw = new UITableRow();
 	ui.addRow(rw);
 	rw.backgroundColor = new Color('#FFFFFF', 100);
 
+    console.log("1")
     let lbtn = rw.addButton('left')
     lbtn.leftAligned();
     lbtn.onTap = () => {
+        console.log("L")
         page--;
         if (page < 0) page = combined.length - 1;
         displayWidgetData(widget, combined);       
     }
 
+    console.log("1")
     let rbtn = rw.addButton('right')
     rbtn.rightAligned();
     rbtn.onTap = () => {
+        console.log("r")
         page++;
         if (page == combined.length) page = 0;
         displayWidgetData(widget, combined);    
     }
 
+    console.log("1")
         ui.present();
-    displayWidgetData(widget, combined);
+        console.log("1")
+        displayWidgetData(widget, combined);
 }
 
 async function displayWidgetData(widget, combined) {
     // console.log(combined[page])
+    console.log("2")
     data = {
         "chain"     : combined[page][1].chain,
         "symbol"    : combined[page][1].symbol,
@@ -46,32 +55,38 @@ async function displayWidgetData(widget, combined) {
         "logo_url"  : combined[page][1].logo_url,
     } 
 
+    console.log("2")
     let i = new Request(data.logo_url);
     let image = widget.addImage(await i.loadImage());
     image.centerAlignImage();
     image.imageSize = new Size(30,30)
     widget.addSpacer(8);
 
+    console.log("2")
     const chaintext = widget.addText(`Chain: ${data.chain}`);
     chaintext.textColor = Color.white();
     chaintext.font = new Font("Courier", 14);
     widget.addSpacer(2);
 
+    console.log("2")
     const amounttext = widget.addText(`${data.symbol}:  ${data.amount.toFixed(2)}`);
     amounttext.textColor = Color.white();
     amounttext.font = new Font("Courier", 14);
     widget.addSpacer(2);
 
+    console.log("2")
     const pricetext = widget.addText(`Price: ${data.price.toFixed(2)}`);
     pricetext.textColor = Color.white();
     pricetext.font = new Font("Courier", 14);
     widget.addSpacer(2);
 
     // TODO: currency conversion
+    console.log("2")
     const usdtext = widget.addText(`${currency}:   ${dataj.total.toFixed(2)}`);
     usdtext.textColor = Color.white();
     usdtext.font = new Font("Courier", 14);
 
+    console.log("2")
     Script.setWidget(widget);
     Script.complete();
     widget.presentMedium();
