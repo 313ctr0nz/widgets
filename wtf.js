@@ -227,7 +227,7 @@ function combineCurrencies(list) {
     return Object.entries(dict);
 }
 
-async function main() {
+function main() {
     // if (mode == "browser") {
     //     var wallets = [
     //         "0x69052fb47b9ad7216c4a2a96ff379936cae6b3b6",
@@ -235,20 +235,20 @@ async function main() {
     //         "0xba5877e97a8c1ddd86343c3a76ed675cb0810910"
     //     ];
     // } else {
-        if ("args" in window)
-            if (!(args.widgetParameter.includes("0x"))) {
-                const title = widget.addText("invalid wallet parameter");
-                title.textColor = Color.white();
-                title.textOpacity = 0.8;
-                title.font = new Font("Helvetica-Light ", 10);
-                widget.addSpacer(4);
-            }
+        // if ("args" in window)
+        //     if (!(args.widgetParameter.includes("0x"))) {
+        //         const title = widget.addText("invalid wallet parameter");
+        //         title.textColor = Color.white();
+        //         title.textOpacity = 0.8;
+        //         title.font = new Font("Helvetica-Light ", 10);
+        //         widget.addSpacer(4);
+        //     }
 
-            if (args.widgetParameter.includes(",")) {
-                // Handle multiple wallet addresses
-            } else {
-                var wallets = [args.widgetParameter]; 
-            }
+        //     if (args.widgetParameter.includes(",")) {
+        //         // Handle multiple wallet addresses
+        //     } else {
+        //         var wallets = [args.widgetParameter]; 
+        //     }
     // }
 
     // let walletProtoList = await getWalletProtoList(wallets);
