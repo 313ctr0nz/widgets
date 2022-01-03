@@ -5,6 +5,75 @@ const currency = "USD";
 // page tracker
 var page = 0;
 
+function displayWidget(combined) {
+    var widget = new ListWidget();
+    widget.backgroundColor=new Color("#222222");
+    
+    if ("args" in window) {
+
+        let lbtn = widget.addButton('left')
+        lbtn.leftAligned();
+        lbtn.onTap = () => {
+            page--;
+            if (page < 0) page = combined.length - 1;
+            displayWidgetData(widget, combined);       
+        }
+
+        let rbtn = widget.addButton('right')
+        rbtn.rightAligned();
+        rbtn.onTap = () => {
+            page++;
+            if (page == combined.length) page = 0;
+            displayWidgetData(widget, combined);    
+        }
+
+        displayWidgetData(widget, combined);
+    }
+}
+
+async function displayWidgetData(widget, combined) {
+    // console.log(combined[page])
+    data = {
+        "chain"     : combined[page][1].chain,
+        "symbol"    : combined[page][1].symbol,
+        "amount"    : combined[page][1].amount,  
+        "price"     : combined[page][1].price,
+        "total"     : combined[page][1].price * combined[page][1].amount,
+        "logo_url"  : combined[page][1].logo_url,
+    } 
+
+    let i = new Request(data.logo_url);
+    let image = widget.addImage(await i.loadImage());
+    image.centerAlignImage();
+    image.imageSize = new Size(30,30)
+    widget.addSpacer(8);
+
+    const chaintext = widget.addText(`Chain: ${data.chain}`);
+    chaintext.textColor = Color.white();
+    chaintext.font = new Font("Courier", 14);
+    widget.addSpacer(2);
+
+    const amounttext = widget.addText(`${data.symbol}:  ${data.amount.toFixed(2)}`);
+    amounttext.textColor = Color.white();
+    amounttext.font = new Font("Courier", 14);
+    widget.addSpacer(2);
+
+    const pricetext = widget.addText(`Price: ${data.price.toFixed(2)}`);
+    pricetext.textColor = Color.white();
+    pricetext.font = new Font("Courier", 14);
+    widget.addSpacer(2);
+
+    // TODO: currency conversion
+    const usdtext = widget.addText(`${currency}:   ${dataj.total.toFixed(2)}`);
+    usdtext.textColor = Color.white();
+    usdtext.font = new Font("Courier", 14);
+
+    Script.setWidget(widget);
+    Script.complete();
+    widget.presentMedium();
+}
+
+
 var combined = [
     [
         "ftm_hectordao",
@@ -128,15 +197,17 @@ var combined = [
     ]
 ]
 
-var widget = new ListWidget();
-widget.backgroundColor=new Color("#222222");
+displayWidget(combined);
 
-const usdtext = widget.addText(`hi`);
-usdtext.textColor = Color.white();
-usdtext.font = new Font("Courier", 14);
+// var widget = new ListWidget();
+// widget.backgroundColor=new Color("#222222");
 
-Script.setWidget(widget);
-Script.complete();
-widget.presentMedium();
+// const usdtext = widget.addText(`hi`);
+// usdtext.textColor = Color.white();
+// usdtext.font = new Font("Courier", 14);
+
+// Script.setWidget(widget);
+// Script.complete();
+// widget.presentMedium();
 
 
