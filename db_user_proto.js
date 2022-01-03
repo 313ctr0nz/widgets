@@ -11,14 +11,16 @@
 //      no quotes please
 
 // TODO 
-// add scriptable support & javascript
+// add scriptable support
 // Add currency conversion
 
+// change to your currency symbol
 const currency = "USD"
 
+// page tracker
 var page = 0;
 
-function displayJSButtons(widget, combined) {
+function displayJSButtons(combined) {
     // console.log(combined)
     var body = document.getElementsByTagName("body")[0];
 
@@ -28,7 +30,7 @@ function displayJSButtons(widget, combined) {
         // console.log("left");
         page--;
         if (page < 0) page = combined.length - 1;
-        displayJSData(widget, combined);
+        displayJSData(combined);
     });
     body.appendChild(lbtn);
 
@@ -39,7 +41,7 @@ function displayJSButtons(widget, combined) {
         // console.log("right");
         page++;
         if (page == combined.length) page = 0;
-        displayJSData(widget, combined);
+        displayJSData(combined);
     });   
 
     var img = document.createElement("img");
@@ -62,11 +64,11 @@ function displayJSButtons(widget, combined) {
     total.setAttribute("id", "total");
     body.appendChild(total);
 
-    displayJSData(widget, combined);
+    displayJSData(combined);
 }
 
 // renders dataObj in widget
-async function displayJSData(widget, combined) {
+async function displayJSData(combined) {
     // console.log(combined[page])
     data = {
         "chain"     : combined[page][1].chain,
@@ -90,36 +92,65 @@ async function displayJSData(widget, combined) {
 
     img = document.getElementById("img")
     img.src = data.logo_url;
+}
 
-    // let image = widget.addImage(dataObj.img);
-    // image.centerAlignImage();
-    // image.imageSize = new Size(30,30)
-    // widget.addSpacer(8);
+function displayWidgetButtons(combined) {
+    var widget = new ListWidget();
+    widget.backgroundColor=new Color("#222222");
+    
+    if ("args" in window) {
+        if (!(args.widgetParameter.includes("0x"))) {
+            const title = widget.addText("invalid wallet parameter");
+            title.textColor = Color.white();
+            title.textOpacity = 0.8;
+            title.font = new Font("Helvetica-Light ", 10);
+            widget.addSpacer(4);
+        }
 
-    // const title = widget.addText(params.header_text);
-    // title.textColor = Color.white();
-    // title.textOpacity = 0.8;
-    // title.font = new Font("Helvetica-Light ", 10);
-    // widget.addSpacer(4);
+        displayWidgetData(widget, combined);
+    }
+}
 
-    // const pricetext = widget.addText(`Price: ${dataObj.price.toFixed(2)}`);
-    // pricetext.textColor = Color.white();
-    // pricetext.font = new Font("Courier", 14);
-    // widget.addSpacer(2);
+async function displayWidgetData(widget, combined) {
+    // console.log(combined[page])
+    data = {
+        "chain"     : combined[page][1].chain,
+        "symbol"    : combined[page][1].symbol,
+        "amount"    : combined[page][1].amount,  
+        "price"     : combined[page][1].price,
+        "total"     : combined[page][1].price * combined[page][1].amount,
+        "logo_url"  : combined[page][1].logo_url,
+    } 
 
-    // const strongtext = widget.addText(`${params.token_disp}:  ${dataObj.token_val.toFixed(2)}`);
-    // strongtext.textColor = Color.white();
-    // strongtext.font = new Font("Courier", 14);
-    // widget.addSpacer(2);
+    let i = new Request(data.logo_url);
+    let image = widget.addImage(await i.loadImage());
+    image.centerAlignImage();
+    image.imageSize = new Size(30,30)
+    widget.addSpacer(8);
 
-    // // TODO: currency conversion
-    // const usdtext = widget.addText(`${params.currency}:   ${dataObj.fiat_val.toFixed(2)}`);
-    // usdtext.textColor = Color.white();
-    // usdtext.font = new Font("Courier", 14);
+    const chaintext = widget.addText(`Chain: ${data.chain}`);
+    chaintext.textColor = Color.white();
+    chaintext.font = new Font("Courier", 14);
+    widget.addSpacer(2);
 
-    // Script.setWidget(widget);
-    // Script.complete();
-    // widget.presentMedium();
+    const amounttext = widget.addText(`${data.symbol}:  ${data.amount.toFixed(2)}`);
+    amounttext.textColor = Color.white();
+    amounttext.font = new Font("Courier", 14);
+    widget.addSpacer(2);
+
+    const pricetext = widget.addText(`Price: ${data.price.toFixed(2)}`);
+    pricetext.textColor = Color.white();
+    pricetext.font = new Font("Courier", 14);
+    widget.addSpacer(2);
+
+    // TODO: currency conversion
+    const usdtext = widget.addText(`${currency}:   ${dataj.total.toFixed(2)}`);
+    usdtext.textColor = Color.white();
+    usdtext.font = new Font("Courier", 14);
+
+    Script.setWidget(widget);
+    Script.complete();
+    widget.presentMedium();
 }
 
 // gets protocols from debank for all wallets
@@ -175,27 +206,12 @@ function combineCurrencies(list) {
 /* Main code starts here */
 
 window.onload = async function() {
-    var widget;
     var mode;
 
     if ("config" in window)
         mode = "scriptable";
     else 
         mode = "javascript";
-
-    //     if (config.runsInWidget) {
-    //         widget = new ListWidget();
-    //         widget.backgroundColor=new Color("#222222");
-    //     }
-    
-    //     if ("args" in window)
-    //         if (!(args.widgetParameter.includes("0x"))) {
-    //         const title = widget.addText("invalid wallet parameter");
-    //         title.textColor = Color.white();
-    //         title.textOpacity = 0.8;
-    //         title.font = new Font("Helvetica-Light ", 10);
-    //         widget.addSpacer(4);
-    // }
 
     if (mode == "javascript")
         var wallets = [
@@ -208,7 +224,7 @@ window.onload = async function() {
             if (args.widgetParameter.includes(",")) {
                 // Handle multiple wallet addresses
             } else {
-                wallets = [args.widgetParameter]; 
+                var wallets = [args.widgetParameter]; 
             }
     }
 
@@ -222,5 +238,7 @@ window.onload = async function() {
     // console.log(combined);
 
     if (mode == "javascript") 
-        displayJSButtons(widget, combined);
+        displayJSButtons(combined);
+    else if (mode == "scriptable")
+        displayWidgetButtons(combined);
 }
