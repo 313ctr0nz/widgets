@@ -1,4 +1,7 @@
+// Author: @313ctr0nz on Github, @ms360 on twitter
+
 // Inspired by @SithNode.Eth on Twitter 
+
 // Designed to work with iOS widgets + Scriptable
 
 // Instructions:
@@ -11,9 +14,11 @@
 // add scriptable support & javascript
 // Add currency conversion
 
+const currency = "USD"
+
 var page = 0;
 
-function displayButtons(widget, combined) {
+function displayJSButtons(widget, combined) {
     // console.log(combined)
     var body = document.getElementsByTagName("body")[0];
 
@@ -23,7 +28,7 @@ function displayButtons(widget, combined) {
         // console.log("left");
         page--;
         if (page < 0) page = combined.length - 1;
-        displayData(widget, combined);
+        displayJSData(widget, combined);
     });
     body.appendChild(lbtn);
 
@@ -34,26 +39,57 @@ function displayButtons(widget, combined) {
         // console.log("right");
         page++;
         if (page == combined.length) page = 0;
-        displayData(widget, combined);
+        displayJSData(widget, combined);
     });   
 
-    let t = document.createElement("div");
-    t.setAttribute("id", "t");
-    body.appendChild(t);
-    displayData(widget, combined);
+    var img = document.createElement("img");
+    img.setAttribute("id", "img");
+    body.appendChild(img)
+
+    let chain = document.createElement("div");
+    chain.setAttribute("id", "chain");
+    body.appendChild(chain);
+
+    let amount = document.createElement("div");
+    amount.setAttribute("id", "amount");
+    body.appendChild(amount);
+
+    let price = document.createElement("div");
+    price.setAttribute("id", "price");
+    body.appendChild(price);
+
+    let total = document.createElement("div");
+    total.setAttribute("id", "total");
+    body.appendChild(total);
+
+    displayJSData(widget, combined);
 }
 
 // renders dataObj in widget
-async function displayData(widget, combined) {
-    // console.log(page)
+async function displayJSData(widget, combined) {
+    // console.log(combined[page])
     data = {
         "chain"     : combined[page][1].chain,
         "symbol"    : combined[page][1].symbol,
-        // "logo_url"  : combined[page][1].logo_url,
-        "amount"    : combined[page][1].amount  
+        "amount"    : combined[page][1].amount,  
+        "price"     : combined[page][1].price,
+        "total"     : combined[page][1].price * combined[page][1].amount,
+        "logo_url"  : combined[page][1].logo_url,
     } 
-    t = document.getElementById("t")
-    t.innerHTML = JSON.stringify(data);
+    chain = document.getElementById("chain")
+    chain.innerHTML = "chain: " + data.chain;
+
+    amount = document.getElementById("amount")
+    amount.innerHTML = data.symbol + ": " + data.amount;
+
+    price = document.getElementById("price")
+    price.innerHTML = "price: " + data.price;
+
+    total = document.getElementById("total")
+    total.innerHTML = currency + ": " + data.total;
+
+    img = document.getElementById("img")
+    img.src = data.logo_url;
 
     // let image = widget.addImage(dataObj.img);
     // image.centerAlignImage();
@@ -140,34 +176,42 @@ function combineCurrencies(list) {
 
 window.onload = async function() {
     var widget;
+    var mode;
+
     if ("config" in window)
-        if (config.runsInWidget) {
-            widget = new ListWidget();
-            widget.backgroundColor=new Color("#222222");
-        }
-    
-        if ("args" in window)
-            if (!(args.widgetParameter.includes("0x"))) {
-            const title = widget.addText("invalid wallet parameter");
-            title.textColor = Color.white();
-            title.textOpacity = 0.8;
-            title.font = new Font("Helvetica-Light ", 10);
-            widget.addSpacer(4);
-    }
-    
-    var wallets = [
-        "0x69052fb47b9ad7216c4a2a96ff379936cae6b3b6",
-        "0x5e8dcda987e97f78baf533bde8493a0a726ad1ef",
-        "0xba5877e97a8c1ddd86343c3a76ed675cb0810910"
-    ];
-    
-    // if ("args" in window)
-    //     if (args.widgetParameter.includes(",")) {
-    //         // Handle multiple wallet addresses
-    //     } else {
-    //         wallets = [args.widgetParameter]; 
+        mode = "scriptable";
+    else 
+        mode = "javascript";
+
+    //     if (config.runsInWidget) {
+    //         widget = new ListWidget();
+    //         widget.backgroundColor=new Color("#222222");
     //     }
     
+    //     if ("args" in window)
+    //         if (!(args.widgetParameter.includes("0x"))) {
+    //         const title = widget.addText("invalid wallet parameter");
+    //         title.textColor = Color.white();
+    //         title.textOpacity = 0.8;
+    //         title.font = new Font("Helvetica-Light ", 10);
+    //         widget.addSpacer(4);
+    // }
+
+    if (mode == "javascript")
+        var wallets = [
+            "0x69052fb47b9ad7216c4a2a96ff379936cae6b3b6",
+            "0x5e8dcda987e97f78baf533bde8493a0a726ad1ef",
+            "0xba5877e97a8c1ddd86343c3a76ed675cb0810910"
+        ];
+    else {
+        if ("args" in window)
+            if (args.widgetParameter.includes(",")) {
+                // Handle multiple wallet addresses
+            } else {
+                wallets = [args.widgetParameter]; 
+            }
+    }
+
     let walletProtoList = await getWalletProtoList(wallets);
     // console.log(walletProtoList);
 
@@ -177,5 +221,6 @@ window.onload = async function() {
     let combined = combineCurrencies(walletProtoData);
     // console.log(combined);
 
-    displayButtons(widget, combined);
+    if (mode == "javascript") 
+        displayJSButtons(widget, combined);
 }
