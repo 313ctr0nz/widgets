@@ -34,7 +34,7 @@ async function displayWidget(combined) {
             "symbol"    : element[1].symbol,
             "amount"    : element[1].amount,  
             "price"     : element[1].price,
-            "total"     : element[1].price * element[page][1].amount,
+            "total"     : element[1].price * element[1].amount,
             "logo_url"  : element[1].logo_url
         } 
         console.log(data);
@@ -61,7 +61,7 @@ async function displayWidget(combined) {
         widget.addSpacer(2);
     
         // TODO: currency conversion
-        const usdtext = widget.addText(`${currency}:   ${dataj.total.toFixed(2)}`);
+        const usdtext = widget.addText(`${currency}:   ${data.total.toFixed(2)}`);
         usdtext.textColor = Color.white();
         usdtext.font = new Font("Courier", 14);    
     }
