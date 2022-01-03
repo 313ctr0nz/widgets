@@ -25,7 +25,7 @@ function displayWidget(combined) {
     widget.backgroundColor=new Color("#222222");
 
     var count = 0;
-    while (count < combined.length && count < maxnum)
+    while (count < combined.length && count < maxnum) {
         var element = combined[count++];
 
         data = {
@@ -62,7 +62,7 @@ function displayWidget(combined) {
         const usdtext = widget.addText(`${currency}:   ${dataj.total.toFixed(2)}`);
         usdtext.textColor = Color.white();
         usdtext.font = new Font("Courier", 14);    
-    });
+    }
 
     Script.setWidget(widget);
     Script.complete();
@@ -76,13 +76,8 @@ async function getWalletProtoList(wallets) {
     var n = 0;
     while (n < wallets.length) {
         const req = new Request(root_url + wallets[n]);
-        if (mode == 'browser') {                // I hate this
-            walletList.push({ "wallet" : wallets[n], "result" : await fetch(req)
-                .then(async(response) => await response.json())})
-        } else if (mode == 'scriptable') {      // also hate this 
-            const json = await req.loadJSON();
-            walletList.push({ "wallet" : wallets[n], "result" : json })
-        }
+        const json = await req.loadJSON();
+        walletList.push({ "wallet" : wallets[n], "result" : json })
         n++;
     }
     // console.log(walletList)
@@ -97,12 +92,7 @@ async function getWalletProtoData(list) {
     return await Promise.all(list.map(async(info, index) => { 
         return await Promise.all(info.result.map(async(proto) => {
             const req = new Request(root_url + proto.id + "&id=" + list[index].wallet);
-                if (mode == 'browser') {                // I hate this
-                    return await fetch(req)
-                        .then(async(response) => await response.json())
-                } else if (mode == 'scriptable') {      // also hate this 
                     return await req.loadJSON();
-                }            
         }))
     }))
 }
