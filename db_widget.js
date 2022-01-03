@@ -43,62 +43,17 @@ async function displayWidget(combined) {
         row = new UITableRow();
         table.addRow(row);
 
-        cell1 = new UITableCell();
-        cell2 = new UITableCell();
-        row.addCell(cell1);
-        row.addCell(cell2);
-
         let i = new Request(data.logo_url);
         let image = cell1.addImage(await i.loadImage());
         image.leftAlignImage();
         image.imageSize = new Size(30,30)
-        cell2.addSpacer(8);
-    
-        const chaintext = cell2.addText(`Chain: ${data.chain}`);
-        chaintext.textColor = Color.white();
-        chaintext.font = new Font("Courier", 14);
-        cell2.addSpacer(2);
-    
-        const amounttext = cell2.addText(`${data.symbol}:  ${data.amount.toFixed(2)}`);
-        amounttext.textColor = Color.white();
-        amounttext.font = new Font("Courier", 14);
-        cell2.addSpacer(2);
-    
-        const pricetext = cell2.addText(`Price: ${data.price.toFixed(2)}`);
-        pricetext.textColor = Color.white();
-        pricetext.font = new Font("Courier", 14);
-        cell2.addSpacer(2);
-    
-        // TODO: currency conversion
-        const usdtext = cell2.addText(`${currency}:   ${data.total.toFixed(2)}`);
-        usdtext.textColor = Color.white();
-        usdtext.font = new Font("Courier", 14);    
 
-        // let i = new Request(data.logo_url);
-        // let image = widget.addImage(await i.loadImage());
-        // image.leftAlignImage();
-        // image.imageSize = new Size(30,30)
-        // widget.addSpacer(8);
+        cell1 = new UITableCell().image(image);
+        row.addCell(cell1);
     
-        // const chaintext = widget.addText(`Chain: ${data.chain}`);
-        // chaintext.textColor = Color.white();
-        // chaintext.font = new Font("Courier", 14);
-        // widget.addSpacer(2);
-    
-        // const amounttext = widget.addText(`${data.symbol}:  ${data.amount.toFixed(2)}`);
-        // amounttext.textColor = Color.white();
-        // amounttext.font = new Font("Courier", 14);
-        // widget.addSpacer(2);
-    
-        // const pricetext = widget.addText(`Price: ${data.price.toFixed(2)}`);
-        // pricetext.textColor = Color.white();
-        // pricetext.font = new Font("Courier", 14);
-        // widget.addSpacer(2);
-    
-        // // TODO: currency conversion
-        // const usdtext = widget.addText(`${currency}:   ${data.total.toFixed(2)}`);
-        // usdtext.textColor = Color.white();
-        // usdtext.font = new Font("Courier", 14);    
+        var txt = `Chain: ${data.chain}<br>${data.symbol}:  ${data.amount.toFixed(2)}<br>Price: ${data.price.toFixed(2)}<br>${currency}:   ${data.total.toFixed(2)}`;
+        cell2 = new UITableCell().text();
+        row.addCell(cell2);
     }
 
     Script.setWidget(widget);
