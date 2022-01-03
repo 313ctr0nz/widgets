@@ -15,12 +15,15 @@
 // Add currency conversion
 
 // change to your currency symbol
-const currency = "USD"
+const currency = "USD";
+
+// const mode = "scriptable";
+const mode = "browser";
 
 // page tracker
 var page = 0;
 
-function displayJSButtons(combined) {
+function displayBrowser(combined) {
     // console.log(combined)
     var body = document.getElementsByTagName("body")[0];
 
@@ -94,7 +97,7 @@ async function displayJSData(combined) {
     img.src = data.logo_url;
 }
 
-function displayWidgetButtons(combined) {
+function displayWidget(combined) {
     var widget = new ListWidget();
     widget.backgroundColor=new Color("#222222");
     
@@ -212,23 +215,14 @@ function combineCurrencies(list) {
     return Object.entries(dict);
 }
 
-/* Main code starts here */
-
-window.onload = async function() {
-    var mode;
-
-    if ("config" in window)
-        mode = "scriptable";
-    else 
-        mode = "javascript";
-
-    if (mode == "javascript")
+async function main() {
+    if (mode == "browser") {
         var wallets = [
             "0x69052fb47b9ad7216c4a2a96ff379936cae6b3b6",
             "0x5e8dcda987e97f78baf533bde8493a0a726ad1ef",
             "0xba5877e97a8c1ddd86343c3a76ed675cb0810910"
         ];
-    else {
+    } else {
         if ("args" in window)
             if (!(args.widgetParameter.includes("0x"))) {
                 const title = widget.addText("invalid wallet parameter");
@@ -254,8 +248,17 @@ window.onload = async function() {
     let combined = combineCurrencies(walletProtoData);
     // console.log(combined);
 
-    if (mode == "javascript") 
-        displayJSButtons(combined);
+    if (mode == "browser") 
+        displayBrowser(combined);
     else if (mode == "scriptable")
-        displayWidgetButtons(combined);
+        displayWidget(combined);
+}
+
+/* Main code starts here */
+if (mode == "browser") {
+    window.onload = async function() {
+        main();
+    }
+} else if (mode == "scriptable") { 
+    main();
 }
