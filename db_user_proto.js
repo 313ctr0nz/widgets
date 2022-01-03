@@ -17,8 +17,8 @@
 // change to your currency symbol
 const currency = "USD";
 
-// const mode = "scriptable";
-const mode = "browser";
+// var mode = "scriptable";
+var mode = "browser";
 
 // page tracker
 var page = 0;
@@ -229,11 +229,7 @@ function combineCurrencies(list) {
 
 async function main() {
     if (mode == "browser") {
-        var wallets = [
-            "0x69052fb47b9ad7216c4a2a96ff379936cae6b3b6",
-            "0x5e8dcda987e97f78baf533bde8493a0a726ad1ef",
-            "0xba5877e97a8c1ddd86343c3a76ed675cb0810910"
-        ];
+        var wallets = [        ];
     } else {
         if ("args" in window)
             if (!(args.widgetParameter.includes("0x"))) {
@@ -252,13 +248,13 @@ async function main() {
     }
 
     let walletProtoList = await getWalletProtoList(wallets);
-    // console.log(walletProtoList);
+    console.log(walletProtoList);
 
     let walletProtoData = await getWalletProtoData(walletProtoList);
-    // console.log(walletProtoData);
+    console.log(walletProtoData);
     
     let combined = combineCurrencies(walletProtoData);
-    // console.log(combined);
+    console.log(combined);
 
     if (mode == "browser") 
         displayBrowser(combined);

@@ -25,10 +25,8 @@ function displayWidget(combined) {
     widget.backgroundColor=new Color("#222222");
 
     var count = 0;
-    combined.forEach(element => {
-        count++;
-        if (count == maxnum) 
-            break;
+    while (count < combined.length && count < maxnum)
+        var element = combined[count++];
 
         data = {
             "chain"     : element[page][1].chain,
