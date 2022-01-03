@@ -20,7 +20,7 @@ const currency = "USD";
 // max number of protocols to display
 const maxnum = 6; 
 
-function displayWidget(combined) {
+async function displayWidget(combined) {
     var widget = new ListWidget();
     widget.backgroundColor=new Color("#222222");
 
@@ -34,8 +34,9 @@ function displayWidget(combined) {
             "amount"    : element[page][1].amount,  
             "price"     : element[page][1].price,
             "total"     : element[page][1].price * element[page][1].amount,
-            "logo_url"  : element[page][1].logo_url,
+            "logo_url"  : element[page][1].logo_url
         } 
+        console.log(data);
     
         let i = new Request(data.logo_url);
         let image = widget.addImage(await i.loadImage());
@@ -137,8 +138,10 @@ async function main() {
     let combined = combineCurrencies(walletProtoData);
     console.log(combined);
 
-    displayWidget(combined);
+    await displayWidget(combined);
 }
 
 /* Main code starts here */
 main();
+
+
