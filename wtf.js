@@ -9,26 +9,29 @@ function displayWidget(combined) {
     var widget = new ListWidget();
     widget.backgroundColor=new Color("#222222");
     
-    if ("args" in window) {
+	const ui = new UITable();
+	ui.removeAllRows();
+	let rw = new UITableRow();
+	ui.addRow(rw);
+	rw.backgroundColor = new Color('#FFFFFF', 100);
 
-        let lbtn = widget.addButton('left')
-        lbtn.leftAligned();
-        lbtn.onTap = () => {
-            page--;
-            if (page < 0) page = combined.length - 1;
-            displayWidgetData(widget, combined);       
-        }
-
-        let rbtn = widget.addButton('right')
-        rbtn.rightAligned();
-        rbtn.onTap = () => {
-            page++;
-            if (page == combined.length) page = 0;
-            displayWidgetData(widget, combined);    
-        }
-
-        displayWidgetData(widget, combined);
+    let lbtn = rw.addButton('left')
+    lbtn.leftAligned();
+    lbtn.onTap = () => {
+        page--;
+        if (page < 0) page = combined.length - 1;
+        displayWidgetData(widget, combined);       
     }
+
+    let rbtn = rw.addButton('right')
+    rbtn.rightAligned();
+    rbtn.onTap = () => {
+        page++;
+        if (page == combined.length) page = 0;
+        displayWidgetData(widget, combined);    
+    }
+
+    displayWidgetData(widget, combined);
 }
 
 async function displayWidgetData(widget, combined) {
