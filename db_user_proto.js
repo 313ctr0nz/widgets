@@ -181,7 +181,7 @@ async function getWalletProtoList(wallets) {
         }
         n++;
     }
-    console.log(walletList)
+    // console.log(walletList)
     return walletList;        
 }
 
@@ -192,11 +192,13 @@ async function getWalletProtoData(list) {
 
     return await Promise.all(list.map(async(info, index) => { 
         return await Promise.all(info.result.map(async(proto) => {
-            return await fetch(root_url + proto.id + "&id=" + list[index].wallet)
-                .then(async(res) => await res.json())
-                .then(r => { 
-                    return r; 
-                })
+            const req = new Request(root_url + proto.id + "&id=" + list[index].wallet);
+                if (mode == 'browser') {                // I hate this
+                    return await fetch(req)
+                        .then(async(response) => await response.json())
+                } else if (mode == 'scriptable') {      // also hate this 
+                    return await req.loadJSON();
+                }            
         }))
     }))
 }
