@@ -19,7 +19,7 @@
 const currency = "USD";
 
 // max number of protocols to display
-const maxnum = 6; 
+const maxnum = 5; 
 
 async function displayWidget(combined) {
     var widget = new ListWidget();
@@ -41,7 +41,7 @@ async function displayWidget(combined) {
     
         let i = new Request(data.logo_url);
         let image = widget.addImage(await i.loadImage());
-        image.centerAlignImage();
+        image.leftAlignImage();
         image.imageSize = new Size(30,30)
         widget.addSpacer(8);
     
@@ -126,6 +126,7 @@ function combineCurrencies(list) {
 /* Main code starts here */
 if (args.widgetParameter.includes(",")) {
     // Handle multiple wallet addresses
+    var wallets = args.widgetParameter.split(",");
 } else {
     var wallets = [args.widgetParameter]; 
 }
