@@ -99,12 +99,21 @@ function displayWidgetButtons(combined) {
     widget.backgroundColor=new Color("#222222");
     
     if ("args" in window) {
-        if (!(args.widgetParameter.includes("0x"))) {
-            const title = widget.addText("invalid wallet parameter");
-            title.textColor = Color.white();
-            title.textOpacity = 0.8;
-            title.font = new Font("Helvetica-Light ", 10);
-            widget.addSpacer(4);
+
+        let lbtn = widget.addButton('left')
+        lbtn.leftAligned();
+        lbtn.onTap = () => {
+            page--;
+            if (page < 0) page = combined.length - 1;
+            displayWidgetData(widget, combined);       
+        }
+
+        let rbtn = widget.addButton('right')
+        rbtn.rightAligned();
+        rbtn.onTap = () => {
+            page++;
+            if (page == combined.length) page = 0;
+            displayWidgetData(widget, combined);    
         }
 
         displayWidgetData(widget, combined);
@@ -221,6 +230,14 @@ window.onload = async function() {
         ];
     else {
         if ("args" in window)
+            if (!(args.widgetParameter.includes("0x"))) {
+                const title = widget.addText("invalid wallet parameter");
+                title.textColor = Color.white();
+                title.textOpacity = 0.8;
+                title.font = new Font("Helvetica-Light ", 10);
+                widget.addSpacer(4);
+            }
+
             if (args.widgetParameter.includes(",")) {
                 // Handle multiple wallet addresses
             } else {
