@@ -11,6 +11,7 @@
 //      no quotes please
 
 // TODO 
+// sort by value 
 // Add currency conversion
 // Add multiple wallet support
 
@@ -29,12 +30,12 @@ async function displayWidget(combined) {
         var element = combined[count++];
 
         data = {
-            "chain"     : element[page][1].chain,
-            "symbol"    : element[page][1].symbol,
-            "amount"    : element[page][1].amount,  
-            "price"     : element[page][1].price,
-            "total"     : element[page][1].price * element[page][1].amount,
-            "logo_url"  : element[page][1].logo_url
+            "chain"     : element[count][1].chain,
+            "symbol"    : element[count][1].symbol,
+            "amount"    : element[count][1].amount,  
+            "price"     : element[count][1].price,
+            "total"     : element[count][1].price * element[page][1].amount,
+            "logo_url"  : element[count][1].logo_url
         } 
         console.log(data);
     
@@ -122,26 +123,23 @@ function combineCurrencies(list) {
     return Object.entries(dict);
 }
 
-async function main() {
-    if (args.widgetParameter.includes(",")) {
-        // Handle multiple wallet addresses
-    } else {
-        var wallets = [args.widgetParameter]; 
-    }
-
-    let walletProtoList = await getWalletProtoList(wallets);
-    console.log(walletProtoList);
-
-    let walletProtoData = await getWalletProtoData(walletProtoList);
-    console.log(walletProtoData);
-    
-    let combined = combineCurrencies(walletProtoData);
-    console.log(combined);
-
-    await displayWidget(combined);
+/* Main code starts here */
+if (args.widgetParameter.includes(",")) {
+    // Handle multiple wallet addresses
+} else {
+    var wallets = [args.widgetParameter]; 
 }
 
-/* Main code starts here */
-main();
+let walletProtoList = await getWalletProtoList(wallets);
+console.log(walletProtoList);
+
+let walletProtoData = await getWalletProtoData(walletProtoList);
+console.log(walletProtoData);
+
+let combined = combineCurrencies(walletProtoData);
+console.log(combined);
+
+await displayWidget(combined);
+
 
 
