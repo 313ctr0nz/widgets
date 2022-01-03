@@ -15,24 +15,23 @@ function displayWidget(combined) {
 	ui.addRow(rw);
 	rw.backgroundColor = new Color('#FFFFFF', 100);
 
-    let lbtn = new UITableCell.button('left')
-    rw.addCell(lbtn)
-    // lbtn.leftAligned();
+    let lbtn = rw.addButton('left')
+    lbtn.leftAligned();
     lbtn.onTap = () => {
         page--;
         if (page < 0) page = combined.length - 1;
         displayWidgetData(widget, combined);       
     }
 
-    let rbtn = new UITableCell.button('right')
-    rw.addCell(rbtn)
-    // rbtn.rightAligned();
+    let rbtn = rw.addButton('right')
+    rbtn.rightAligned();
     rbtn.onTap = () => {
         page++;
         if (page == combined.length) page = 0;
         displayWidgetData(widget, combined);    
     }
 
+        ui.present();
     displayWidgetData(widget, combined);
 }
 
