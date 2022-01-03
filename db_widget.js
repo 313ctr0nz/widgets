@@ -30,12 +30,12 @@ async function displayWidget(combined) {
         var element = combined[count++];
 
         data = {
-            "chain"     : element[count][1].chain,
-            "symbol"    : element[count][1].symbol,
-            "amount"    : element[count][1].amount,  
-            "price"     : element[count][1].price,
-            "total"     : element[count][1].price * element[page][1].amount,
-            "logo_url"  : element[count][1].logo_url
+            "chain"     : element[1].chain,
+            "symbol"    : element[1].symbol,
+            "amount"    : element[1].amount,  
+            "price"     : element[1].price,
+            "total"     : element[1].price * element[page][1].amount,
+            "logo_url"  : element[1].logo_url
         } 
         console.log(data);
     
