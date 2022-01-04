@@ -14,6 +14,4 @@ IOS widgets - inspired by SithNode.eth
 * Add wallet address to Widget Scriptable Parameter
 
 ## script details
-* sHEC.js - scrape debank for staked HEC info
-* TIME_MEMO.js - scrape debank for staked TIME 
-* debank.js - scrape debank for a given wallet - work in progress, dont recommend this yet
+* debank_proto.js - query debank for given wallets protocols - stakes/bonds/rewards pools
