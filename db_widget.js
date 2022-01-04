@@ -41,8 +41,7 @@ async function displayWidget(combined) {
     
         let i = new Request(data.logo_url);
         let image = await i.loadImage();
-        image.leftAlignImage();
-        image.imageSize = new Size(30,30)
+        image.imageSize = new Size(30,30);
         widget.addImage(image);
         widget.addSpacer(8);
     
