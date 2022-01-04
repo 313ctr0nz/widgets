@@ -26,7 +26,6 @@ async function displayWidget(combined) {
     widget.backgroundColor=new Color("#222222");
 
     var count = 0;
-    let table = new UITable();
     while (count < combined.length && count < maxnum) {
         var element = combined[count++];
 
@@ -40,20 +39,32 @@ async function displayWidget(combined) {
         } 
         console.log(data);
     
-        row = new UITableRow();
-        table.addRow(row);
-
         let i = new Request(data.logo_url);
         let image = await i.loadImage();
         image.leftAlignImage();
         image.imageSize = new Size(30,30)
-        var cell1 = new UITableCell().image(image);
-
-        row.addCell(cell1);
+        widget.addImage(image);
+        widget.addSpacer(8);
     
-        var txt = `Chain: ${data.chain}<br>${data.symbol}:  ${data.amount.toFixed(2)}<br>Price: ${data.price.toFixed(2)}<br>${currency}:   ${data.total.toFixed(2)}`;
-        var cell2 = new UITableCell().text(txt);
-        row.addCell(cell2);
+        const chaintext = widget.addText(`Chain: ${data.chain}`);
+        chaintext.textColor = Color.white();
+        chaintext.font = new Font("Courier", 14);
+        widget.addSpacer(2);
+    
+        const amounttext = widget.addText(`${data.symbol}:  ${data.amount.toFixed(2)}`);
+        amounttext.textColor = Color.white();
+        amounttext.font = new Font("Courier", 14);
+        widget.addSpacer(2);
+    
+        const pricetext = widget.addText(`Price: ${data.price.toFixed(2)}`);
+        pricetext.textColor = Color.white();
+        pricetext.font = new Font("Courier", 14);
+        widget.addSpacer(2);
+    
+        // TODO: currency conversion
+        const usdtext = widget.addText(`${currency}:   ${data.total.toFixed(2)}`);
+        usdtext.textColor = Color.white();
+        usdtext.font = new Font("Courier", 14);    
     }
 
     Script.setWidget(widget);
