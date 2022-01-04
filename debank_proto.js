@@ -17,14 +17,13 @@
 //      no quotes please
 
 // TODO 
-// Fix layout
 // Add currency conversion
 
 // change to your currency symbol
 const currency = "USD";
 
 // max number of protocols to display
-const maxnum = 10; 
+const maxnum = 8; 
 
 function compare( a, b ) {
   if ( a[1].total < b[1].total ){
@@ -151,7 +150,7 @@ function combineCurrencies(list) {
                 } else if ("token_list" in element.portfolio_item_list[0].detail) {
                     dict[element.id].amount += element.portfolio_item_list[0].detail.token_list[0].amount;
                 }
-                dict[element.id].total += dict[element.id].price * dict[element.id].amount;
+                dict[element.id].total = dict[element.id].price * dict[element.id].amount;
             } else {
                 if ("supply_token_list" in element.portfolio_item_list[0].detail) {
                     Object.assign(dict, { [element.id] : element.portfolio_item_list[0].detail.supply_token_list[0] }) 
@@ -183,4 +182,5 @@ let combined = combineCurrencies(walletProtoData);
 console.log(combined);
 
 await displayWidget(combined);
+
 
