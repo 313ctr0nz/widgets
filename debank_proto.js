@@ -1,3 +1,9 @@
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: red; icon-glyph: magic;
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: red; icon-glyph: magic;
 // Author: @313ctr0nz on Github, @ms360 on twitter
 
 // Inspired by @SithNode.Eth on Twitter 
@@ -11,19 +17,38 @@
 //      no quotes please
 
 // TODO 
-// sort by value 
+// Fix layout
 // Add currency conversion
-// Add multiple wallet support
 
 // change to your currency symbol
 const currency = "USD";
 
 // max number of protocols to display
-const maxnum = 5; 
+const maxnum = 10; 
+
+function compare( a, b ) {
+  if ( a[1].total < b[1].total ){
+    return 1;
+  }
+  if ( a[1].total > b[1].total ){
+    return -1;
+  }
+  return 0;
+}
 
 async function displayWidget(combined) {
+    combined = combined.sort(compare);
+
     var widget = new ListWidget();
     widget.backgroundColor=new Color("#222222");
+    let g = new LinearGradient()
+    g.locations = [0, 1]
+    g.colors = [
+        new Color("#0a1860"),
+        new Color("#000000")
+    ]
+    widget.backgroundGradient = g
+    widget.setPadding(0, 10, 0, 10)
 
     var count = 0;
     while (count < combined.length && count < maxnum) {
@@ -34,36 +59,51 @@ async function displayWidget(combined) {
             "symbol"    : element[1].symbol,
             "amount"    : element[1].amount,  
             "price"     : element[1].price,
-            "total"     : element[1].price * element[1].amount,
+            "total"     : element[1].total,
             "logo_url"  : element[1].logo_url
         } 
         console.log(data);
     
         let i = new Request(data.logo_url);
         let image = await i.loadImage();
-        image.imageSize = new Size(30,30);
-        widget.addImage(image);
-        widget.addSpacer(8);
-    
-        const chaintext = widget.addText(`Chain: ${data.chain}`);
-        chaintext.textColor = Color.white();
-        chaintext.font = new Font("Courier", 14);
-        widget.addSpacer(2);
-    
-        const amounttext = widget.addText(`${data.symbol}:  ${data.amount.toFixed(2)}`);
-        amounttext.textColor = Color.white();
-        amounttext.font = new Font("Courier", 14);
-        widget.addSpacer(2);
-    
-        const pricetext = widget.addText(`Price: ${data.price.toFixed(2)}`);
-        pricetext.textColor = Color.white();
-        pricetext.font = new Font("Courier", 14);
-        widget.addSpacer(2);
-    
-        // TODO: currency conversion
-        const usdtext = widget.addText(`${currency}:   ${data.total.toFixed(2)}`);
-        usdtext.textColor = Color.white();
-        usdtext.font = new Font("Courier", 14);    
+
+        let titleStack = widget.addStack()
+        titleStack.layoutHorizontally()
+        titleStack.centerAlignContent()
+        if (image != null) {
+          let wimage = titleStack.addImage(image)
+          wimage.imageSize = new Size(40, 40)
+          titleStack.addSpacer(10);
+        }
+
+        let dataStack = titleStack.addStack()
+        dataStack.layoutVertically()
+        dataStack.centerAlignContent()
+
+        let wtitle = dataStack.addText(`${data.price.toFixed(2)}`);
+        wtitle.font = Font.mediumSystemFont(12)
+        wtitle.textOpacity = 1
+        wtitle.textColor = Color.white()
+        wtitle.lineLimit = 1
+
+        let moneyStack = dataStack.addStack()
+        moneyStack.layoutHorizontally()
+        moneyStack.centerAlignContent()
+
+        let wtitle2 = moneyStack.addText(`${data.symbol}: ${data.amount.toFixed(2)}`);
+        wtitle2.font = Font.mediumSystemFont(12)
+        wtitle2.textOpacity = 1
+        wtitle2.textColor = Color.white()
+        wtitle2.lineLimit = 1
+
+        moneyStack.addSpacer(10);
+
+        let wtitle3 = moneyStack.addText(`${currency}: ${data.total.toFixed(2)}`);
+        wtitle3.font = Font.mediumSystemFont(12)
+        wtitle3.textOpacity = 1
+        wtitle3.textColor = Color.white()
+        wtitle3.lineLimit = 1
+
     }
 
     Script.setWidget(widget);
@@ -111,12 +151,14 @@ function combineCurrencies(list) {
                 } else if ("token_list" in element.portfolio_item_list[0].detail) {
                     dict[element.id].amount += element.portfolio_item_list[0].detail.token_list[0].amount;
                 }
+                dict[element.id].total += dict[element.id].price * dict[element.id].amount;
             } else {
                 if ("supply_token_list" in element.portfolio_item_list[0].detail) {
                     Object.assign(dict, { [element.id] : element.portfolio_item_list[0].detail.supply_token_list[0] }) 
                 } else if ("token_list" in element.portfolio_item_list[0].detail) {
                     Object.assign(dict, { [element.id] : element.portfolio_item_list[0].detail.token_list[0] }) 
                 }
+                dict[element.id].total = dict[element.id].price * dict[element.id].amount;
             }
         })
     });
@@ -141,6 +183,4 @@ let combined = combineCurrencies(walletProtoData);
 console.log(combined);
 
 await displayWidget(combined);
-
-
 
