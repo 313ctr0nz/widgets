@@ -71,7 +71,7 @@ async function displayWidget(combined) {
         titleStack.centerAlignContent()
         if (image != null) {
           let wimage = titleStack.addImage(image)
-          wimage.imageSize = new Size(40, 40)
+          wimage.imageSize = new Size(30, 30)
           titleStack.addSpacer(10);
         }
 
@@ -80,7 +80,7 @@ async function displayWidget(combined) {
         dataStack.centerAlignContent()
 
         let wtitle = dataStack.addText(`${data.price.toFixed(2)}`);
-        wtitle.font = Font.mediumSystemFont(12)
+        wtitle.font = Font.mediumSystemFont(16)
         wtitle.textOpacity = 1
         wtitle.textColor = Color.white()
         wtitle.lineLimit = 1
@@ -90,7 +90,7 @@ async function displayWidget(combined) {
         moneyStack.centerAlignContent()
 
         let wtitle2 = moneyStack.addText(`${data.symbol}: ${data.amount.toFixed(2)}`);
-        wtitle2.font = Font.mediumSystemFont(12)
+        wtitle2.font = Font.mediumSystemFont(16)
         wtitle2.textOpacity = 1
         wtitle2.textColor = Color.white()
         wtitle2.lineLimit = 1
@@ -98,7 +98,7 @@ async function displayWidget(combined) {
         moneyStack.addSpacer(10);
 
         let wtitle3 = moneyStack.addText(`${currency}: ${data.total.toFixed(2)}`);
-        wtitle3.font = Font.mediumSystemFont(12)
+        wtitle3.font = Font.mediumSystemFont(16)
         wtitle3.textOpacity = 1
         wtitle3.textColor = Color.white()
         wtitle3.lineLimit = 1
@@ -166,20 +166,19 @@ function combineCurrencies(list) {
 
 /* Main code starts here */
 if (args.widgetParameter.includes(",")) {
-    // Handle multiple wallet addresses
     var wallets = args.widgetParameter.split(",");
 } else {
     var wallets = [args.widgetParameter]; 
 }
 
 let walletProtoList = await getWalletProtoList(wallets);
-console.log(walletProtoList);
+// console.log(walletProtoList);
 
 let walletProtoData = await getWalletProtoData(walletProtoList);
-console.log(walletProtoData);
+// console.log(walletProtoData);
 
 let combined = combineCurrencies(walletProtoData);
-console.log(combined);
+// console.log(combined);
 
 await displayWidget(combined);
 
