@@ -101,7 +101,7 @@ async function displayWidget(combined) {
         dataStack.layoutVertically()
         dataStack.centerAlignContent()
 
-        let wtitle = dataStack.addText(`${data.price.toFixed(2)}`);
+        let wtitle = dataStack.addText(`${(data.price/rate).toFixed(2)}`);
         wtitle.font = Font.mediumSystemFont(16)
         wtitle.textOpacity = 1
         wtitle.textColor = Color.white()
@@ -168,8 +168,7 @@ async function getExchangeRate() {
 }
 
 // combine common currencies between wallets
-async function combineCurrencies(list) {
-    var rate = await getExchangeRate();
+async function combineCurrencies(list, rate) {
     var dict = {};
     list.forEach(proto => {
         proto.forEach(element => {
@@ -216,10 +215,12 @@ if (wallets.length > 0) {
     let walletProtoData = await getWalletProtoData(walletProtoList);
     // console.log(walletProtoData);
 
-    let combined = await combineCurrencies(walletProtoData);
+    var rate = await getExchangeRate();
+
+    let combined = await combineCurrencies(walletProtoData, rate);
     // console.log(combined);
 
-    await displayWidget(combined);
+    await displayWidget(combined, rate);
 } else {
     displayError(); 
 }
