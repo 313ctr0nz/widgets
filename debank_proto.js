@@ -35,6 +35,28 @@ function compare( a, b ) {
   return 0;
 }
 
+function displayError() {
+    var widget = new ListWidget();
+    widget.backgroundColor=new Color("#222222");
+    let g = new LinearGradient()
+    g.locations = [0, 1]
+    g.colors = [
+        new Color("#0a1860"),
+        new Color("#000000")
+    ]
+    widget.backgroundGradient = g
+    widget.setPadding(0, 10, 0, 10)
+
+    let wtitle = widget.addText(`Error parsing wallet addresses`);
+    wtitle.font = Font.mediumSystemFont(16)
+    wtitle.textOpacity = 1
+    wtitle.textColor = Color.white()
+
+    Script.setWidget(widget);
+    Script.complete();
+    widget.presentMedium();
+}
+
 async function displayWidget(combined) {
     combined = combined.sort(compare);
 
@@ -133,13 +155,21 @@ async function getWalletProtoData(list) {
     return await Promise.all(list.map(async(info, index) => { 
         return await Promise.all(info.result.map(async(proto) => {
             const req = new Request(root_url + proto.id + "&id=" + list[index].wallet);
-                    return await req.loadJSON();
+                return await req.loadJSON();
         }))
     }))
 }
 
+async function getExchangeRate() {
+    url = "https://api.exchangerate.host/latest?base=" + currency
+    const req = new Request(url);
+    res = await req.loadJSON();
+    return (res.rates.USD)
+}
+
 // combine common currencies between wallets
-function combineCurrencies(list) {
+async function combineCurrencies(list) {
+    var rate = await getExchangeRate();
     var dict = {};
     list.forEach(proto => {
         proto.forEach(element => {
@@ -150,14 +180,14 @@ function combineCurrencies(list) {
                 } else if ("token_list" in element.portfolio_item_list[0].detail) {
                     dict[element.id].amount += element.portfolio_item_list[0].detail.token_list[0].amount;
                 }
-                dict[element.id].total = dict[element.id].price * dict[element.id].amount;
+                dict[element.id].total = dict[element.id].price * dict[element.id].amount / rate;
             } else {
                 if ("supply_token_list" in element.portfolio_item_list[0].detail) {
                     Object.assign(dict, { [element.id] : element.portfolio_item_list[0].detail.supply_token_list[0] }) 
                 } else if ("token_list" in element.portfolio_item_list[0].detail) {
                     Object.assign(dict, { [element.id] : element.portfolio_item_list[0].detail.token_list[0] }) 
                 }
-                dict[element.id].total = dict[element.id].price * dict[element.id].amount;
+                dict[element.id].total = dict[element.id].price * dict[element.id].amount / rate;
             }
         })
     });
@@ -165,21 +195,32 @@ function combineCurrencies(list) {
 }
 
 /* Main code starts here */
-if (args.widgetParameter.includes(",")) {
-    var wallets = args.widgetParameter.split(",");
+var wallets = []
+
+if (args) {
+  if (args.widgetParameter)
+    if (args.widgetParameter.includes(",")) {
+        wallets = args.widgetParameter.split(",");
+    } else {
+        wallets = [args.widgetParameter]; 
+    }
 } else {
-    var wallets = [args.widgetParameter]; 
+  displayError(); 
 }
+ 
+console.log(wallets)
+if (wallets.length > 0) {
+    let walletProtoList = await getWalletProtoList(wallets);
+    // console.log(walletProtoList);
 
-let walletProtoList = await getWalletProtoList(wallets);
-// console.log(walletProtoList);
+    let walletProtoData = await getWalletProtoData(walletProtoList);
+    // console.log(walletProtoData);
 
-let walletProtoData = await getWalletProtoData(walletProtoList);
-// console.log(walletProtoData);
+    let combined = await combineCurrencies(walletProtoData);
+    // console.log(combined);
 
-let combined = combineCurrencies(walletProtoData);
-// console.log(combined);
-
-await displayWidget(combined);
-
+    await displayWidget(combined);
+} else {
+    displayError(); 
+}
 
