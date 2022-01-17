@@ -4,6 +4,8 @@
 // Author: @313ctr0nz on Github, @ms360 on twitter
 
 // Designed to work with iOS widgets + Scriptable
+// Donations welcome @ 0xE34b794D84922A21E2cb1F7f360A89Ff65DcC9e9 
+// ($ETH/$AVAX/$FTM/$AETH/$MATIC/$CRO/$STRONG)
 
 // Instructions:
 //  Copy this code into the Scriptable editor

@@ -9,15 +9,15 @@
 // Inspired by @SithNode.Eth on Twitter 
 
 // Designed to work with iOS widgets + Scriptable
+// Donations welcome @ 0xE34b794D84922A21E2cb1F7f360A89Ff65DcC9e9 
+// ($ETH/$AVAX/$FTM/$AETH/$MATIC/$CRO/$STRONG)
 
 // Instructions:
 //  Copy this code into the Scriptable editor
 //  Add wallet addresses to Widget Scriptable Parameter
 //      separate multiple addresses with comma ",", 
 //      no quotes please
-
-// TODO 
-// Add currency conversion
+// Change the currency below to the 3 character standard currency code
 
 // change to your currency symbol
 const currency = "USD";
