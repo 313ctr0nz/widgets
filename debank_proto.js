@@ -7,6 +7,7 @@
 // Author: @313ctr0nz on Github, @ms360 on twitter
 
 // Inspired by @SithNode.Eth on Twitter 
+// GUI improvements by @gigabit_eth on Twitter
 
 // Designed to work with iOS widgets + Scriptable
 // Donations welcome @ 0xE34b794D84922A21E2cb1F7f360A89Ff65DcC9e9 
@@ -48,7 +49,7 @@ function displayError() {
     widget.setPadding(0, 10, 0, 10)
 
     let wtitle = widget.addText(`Error parsing wallet addresses`);
-    wtitle.font = Font.mediumSystemFont(16)
+    wtitle.font = Font.mediumSystemFont(14)
     wtitle.textOpacity = 1
     wtitle.textColor = Color.white()
 
@@ -69,7 +70,7 @@ async function displayWidget(combined) {
         new Color("#000000")
     ]
     widget.backgroundGradient = g
-    widget.setPadding(0, 10, 0, 10)
+    widget.setPadding(-48, 15, 0, 15)
 
     var count = 0;
     while (count < combined.length && count < maxnum) {
@@ -94,35 +95,41 @@ async function displayWidget(combined) {
         if (image != null) {
           let wimage = titleStack.addImage(image)
           wimage.imageSize = new Size(30, 30)
-          titleStack.addSpacer(10);
+          titleStack.addSpacer(null);
         }
 
         let dataStack = titleStack.addStack()
         dataStack.layoutVertically()
-        dataStack.centerAlignContent()
+        dataStack.centerAlignContent()   
+        dataStack.addSpacer(6)
 
         let wtitle = dataStack.addText(`${(data.price/rate).toFixed(2)}`);
-        wtitle.font = Font.mediumSystemFont(16)
+        wtitle.font = Font.mediumSystemFont(20)
         wtitle.textOpacity = 1
         wtitle.textColor = Color.white()
         wtitle.lineLimit = 1
 
         let moneyStack = dataStack.addStack()
         moneyStack.layoutHorizontally()
-        moneyStack.centerAlignContent()
+        moneyStack.topAlignContent()
+        
 
-        let wtitle2 = moneyStack.addText(`${data.symbol}: ${data.amount.toFixed(2)}`);
-        wtitle2.font = Font.mediumSystemFont(16)
+        let wtitle2 = moneyStack.addText(`${data.amount.toFixed(2)} | ${data.symbol}`);
+        wtitle2.font = Font.mediumSystemFont(9)
         wtitle2.textOpacity = 1
-        wtitle2.textColor = Color.white()
+        wtitle2.textColor = Color.lightGray()
         wtitle2.lineLimit = 1
 
-        moneyStack.addSpacer(10);
+        moneyStack.addSpacer(null);
+        
+        let totalStack = titleStack.addStack()
+        totalStack.layoutHorizontally()
+        totalStack.centerAlignContent()
 
-        let wtitle3 = moneyStack.addText(`${currency}: ${data.total.toFixed(2)}`);
-        wtitle3.font = Font.mediumSystemFont(16)
+        let wtitle3 = totalStack.addText(`${data.total.toFixed(2)} ${currency}`);
+        wtitle3.font = Font.mediumSystemFont(8)
         wtitle3.textOpacity = 1
-        wtitle3.textColor = Color.white()
+        wtitle3.textColor = Color.gray()
         wtitle3.lineLimit = 1
 
     }
@@ -222,6 +229,5 @@ if (wallets.length > 0) {
 
     await displayWidget(combined, rate);
 } else {
-    displayError(); 
+    displayError();
 }
-
