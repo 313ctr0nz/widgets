@@ -70,7 +70,7 @@ async function displayWidget(combined) {
         new Color("#000000")
     ]
     widget.backgroundGradient = g
-    widget.setPadding(-48, 15, 0, 15)
+    widget.setPadding(-8, 15, 0, 15)
 
     var count = 0;
     while (count < combined.length && count < maxnum) {
@@ -101,7 +101,7 @@ async function displayWidget(combined) {
         let dataStack = titleStack.addStack()
         dataStack.layoutVertically()
         dataStack.centerAlignContent()   
-        dataStack.addSpacer(6)
+        dataStack.addSpacer(7)
 
         let wtitle = dataStack.addText(`${(data.price/rate).toFixed(2)}`);
         wtitle.font = Font.mediumSystemFont(20)
