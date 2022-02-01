@@ -24,7 +24,7 @@
 const currency = "USD";
 
 // max number of protocols to display
-const maxnum = 8; 
+const maxnum = 3;
 
 function compare( a, b ) {
   if ( a[1].total < b[1].total ){
@@ -112,7 +112,6 @@ async function displayWidget(combined) {
         let moneyStack = dataStack.addStack()
         moneyStack.layoutHorizontally()
         moneyStack.topAlignContent()
-        
 
         let wtitle2 = moneyStack.addText(`${data.amount.toFixed(2)} | ${data.symbol}`);
         wtitle2.font = Font.mediumSystemFont(9)
@@ -127,11 +126,10 @@ async function displayWidget(combined) {
         totalStack.centerAlignContent()
 
         let wtitle3 = totalStack.addText(`${data.total.toFixed(2)} ${currency}`);
-        wtitle3.font = Font.mediumSystemFont(8)
+        wtitle3.font = Font.mediumSystemFont(10)
         wtitle3.textOpacity = 1
-        wtitle3.textColor = Color.gray()
+        wtitle3.textColor = Color.white()
         wtitle3.lineLimit = 1
-
     }
 
     Script.setWidget(widget);
