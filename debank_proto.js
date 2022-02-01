@@ -24,7 +24,7 @@
 const currency = "USD";
 
 // max number of protocols to display
-const maxnum = 3;
+const maxnum = 8;
 
 function compare( a, b ) {
   if ( a[1].total < b[1].total ){
