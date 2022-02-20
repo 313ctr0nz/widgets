@@ -4,6 +4,9 @@
 // Variables used by Scriptable.
 // These must be at the very top of the file. Do not edit.
 // icon-color: red; icon-glyph: magic;
+// Variables used by Scriptable.
+// These must be at the very top of the file. Do not edit.
+// icon-color: red; icon-glyph: magic;
 // Author: @313ctr0nz on Github, @ms360 on twitter
 
 // Inspired by @SithNode.Eth on Twitter 
@@ -24,7 +27,7 @@
 const currency = "USD";
 
 // max number of protocols to display
-const maxnum = 8;
+const maxnum = 3;
 
 function compare( a, b ) {
   if ( a[1].total < b[1].total ){
@@ -112,6 +115,7 @@ async function displayWidget(combined) {
         let moneyStack = dataStack.addStack()
         moneyStack.layoutHorizontally()
         moneyStack.topAlignContent()
+        
 
         let wtitle2 = moneyStack.addText(`${data.amount.toFixed(2)} | ${data.symbol}`);
         wtitle2.font = Font.mediumSystemFont(9)
@@ -126,10 +130,11 @@ async function displayWidget(combined) {
         totalStack.centerAlignContent()
 
         let wtitle3 = totalStack.addText(`${data.total.toFixed(2)} ${currency}`);
-        wtitle3.font = Font.mediumSystemFont(10)
+        wtitle3.font = Font.mediumSystemFont(12)
         wtitle3.textOpacity = 1
         wtitle3.textColor = Color.white()
         wtitle3.lineLimit = 1
+
     }
 
     Script.setWidget(widget);
@@ -178,21 +183,23 @@ async function combineCurrencies(list, rate) {
     list.forEach(proto => {
         proto.forEach(element => {
             // console.log(element)
-            if (element.id in dict) {
-                if ("supply_token_list" in element.portfolio_item_list[0].detail) {
-                    dict[element.id].amount += element.portfolio_item_list[0].detail.supply_token_list[0].amount;
-                } else if ("token_list" in element.portfolio_item_list[0].detail) {
-                    dict[element.id].amount += element.portfolio_item_list[0].detail.token_list[0].amount;
-                }
-                dict[element.id].total = dict[element.id].price * dict[element.id].amount / rate;
-            } else {
-                if ("supply_token_list" in element.portfolio_item_list[0].detail) {
-                    Object.assign(dict, { [element.id] : element.portfolio_item_list[0].detail.supply_token_list[0] }) 
-                } else if ("token_list" in element.portfolio_item_list[0].detail) {
-                    Object.assign(dict, { [element.id] : element.portfolio_item_list[0].detail.token_list[0] }) 
-                }
-                dict[element.id].total = dict[element.id].price * dict[element.id].amount / rate;
-            }
+             element.portfolio_item_list.forEach(item => {
+              if (element.id in dict) {
+                  if ("supply_token_list" in item.detail) {
+                      dict[element.id].amount += item.detail.supply_token_list[0].amount;
+                  } else if ("token_list" in item.detail) {
+                      dict[element.id].amount += item.detail.token_list[0].amount;
+                  }
+                  dict[element.id].total += dict[element.id].price * dict[element.id].amount / rate;
+              } else {
+                  if ("supply_token_list" in item.detail) {
+                      Object.assign(dict, { [element.id] : item.detail.supply_token_list[0] }) 
+                  } else if ("token_list" in item.detail) {
+                      Object.assign(dict, { [element.id] : item.detail.token_list[0] }) 
+                  }
+                  dict[element.id].total = dict[element.id].price * dict[element.id].amount / rate;
+              }
+            });
         })
     });
     return Object.entries(dict);
