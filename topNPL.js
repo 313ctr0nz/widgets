@@ -84,49 +84,48 @@ async function displayWidget(tokens, rate) {
         let i = new Request(data.logo_url);
         let image = await i.loadImage();
 
-        let titleStack = widget.addStack()
-        titleStack.layoutHorizontally()
-        titleStack.centerAlignContent()
+        let rowStack = widget.addStack()
+        rowStack.layoutHorizontally()
+        rowStack.centerAlignContent()
         if (image != null) {
-          let wimage = titleStack.addImage(image)
+          let wimage = rowStack.addImage(image)
           wimage.imageSize = new Size(30, 30)
-          titleStack.addSpacer(null);
+          rowStack.addSpacer(null);
         }
 
-        let dataStack = titleStack.addStack()
+        let dataStack = rowStack.addStack()
         dataStack.layoutVertically()
         dataStack.centerAlignContent()   
         dataStack.addSpacer(7)
 
-        let wtitle = dataStack.addText(`${(data.price/rate).toFixed(2)} ${currency.toUpperCase()}`);
-        wtitle.font = Font.mediumSystemFont(20)
-        wtitle.textOpacity = 1
-        wtitle.textColor = Color.white()
-        wtitle.lineLimit = 1
+        let pricetext = dataStack.addText(`${(data.price/rate).toFixed(2)} ${currency.toUpperCase()}`);
+        pricetext.font = Font.mediumSystemFont(14)
+        pricetext.textOpacity = 1
+        pricetext.textColor = Color.white()
+        pricetext.lineLimit = 1
 
         let moneyStack = dataStack.addStack()
         moneyStack.layoutHorizontally() 
         moneyStack.topAlignContent()
         
-        let wtitle2 = moneyStack.addText(`${data.amount.toFixed(2)} | ${data.symbol}`);
-        wtitle2.font = Font.mediumSystemFont(9)
-        wtitle2.textOpacity = 1
-        wtitle2.textColor = Color.lightGray()
-        wtitle2.lineLimit = 1
+        let amounttext = moneyStack.addText(`${data.amount.toFixed(2)} | ${data.symbol} @ ${data.value.toFixed(2)} ${currency.toUpperCase()}`);
+        amounttext.font = Font.mediumSystemFont(12)
+        amounttext.textOpacity = 1
+        amounttext.textColor = Color.lightGray()
+        amounttext.lineLimit = 1
 
         moneyStack.addSpacer(null);
         
-        let totalStack = titleStack.addStack()
+        let totalStack = rowStack.addStack()
         totalStack.layoutHorizontally()
         totalStack.centerAlignContent()
 
-        let wtitle3 = totalStack.addText(`${data.total.toFixed(2)} ${currency}`);
-        wtitle3.font = Font.mediumSystemFont(12)
-        wtitle3.textOpacity = 1
-        wtitle3.textColor = (data.total > 0) ? Color.green() : Color.red();
-        wtitle3.lineLimit = 1
-       
-    }
+        let pltext = totalStack.addText(`${data.total.toFixed(2)} ${currency.toUpperCase()}`);
+        pltext.font = Font.mediumSystemFont(12)
+        pltext.textOpacity = 1
+        pltext.textColor = (data.total > 0) ? Color.green() : Color.red();
+        pltext.lineLimit = 1
+}
 
     Script.setWidget(widget);
     Script.complete(); 
