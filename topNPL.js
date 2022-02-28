@@ -98,7 +98,7 @@ async function displayWidget(tokens, rate) {
         dataStack.centerAlignContent()   
         dataStack.addSpacer(7)
 
-        let pricetext = dataStack.addText(`${(data.price/rate).toFixed(2)} ${currency.toUpperCase()}`);
+        let pricetext = dataStack.addText(`${(data.price/rate).toFixed(2)}`);
         pricetext.font = Font.mediumSystemFont(14)
         pricetext.textOpacity = 1
         pricetext.textColor = Color.white()
@@ -108,7 +108,7 @@ async function displayWidget(tokens, rate) {
         moneyStack.layoutHorizontally() 
         moneyStack.topAlignContent()
         
-        let amounttext = moneyStack.addText(`${data.amount.toFixed(2)} | ${data.symbol} @ ${data.value.toFixed(2)} ${currency.toUpperCase()}`);
+        let amounttext = moneyStack.addText(`${data.amount.toFixed(2)} | ${data.symbol} @ ${data.value.toFixed(2)}`);
         amounttext.font = Font.mediumSystemFont(12)
         amounttext.textOpacity = 1
         amounttext.textColor = Color.lightGray()
